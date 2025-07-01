@@ -79,7 +79,8 @@ elif [ "$choice" == "3" ]; then
     echo "You selected Option 3: Show Current Users"
     show_current_users
 elif [ "$choice" == "4" ]; then
-    echo "Exiting... Goodbye!"
+    echo "You've selected: Exit"
+    echo "Goodbye!"
     exit 0
 else
     echo "Invalid selection. Please select options between 1-4"
