@@ -19,6 +19,7 @@ show_system_info() {
     echo "------------------------------"
 }
 
+# FUNCTION 1.5 > HOW TO GET THE MAC OS VERSION TO SHOW TO UP
 # with the power of insane mamount of googling, the below function will check, is the OS Darwin, cause Darwin = macOS.
 # if yes then it will display the verson with the echo
 # if not then it linux/windows
@@ -33,12 +34,12 @@ get_os_info_because_mac_is_weird() {
     fi
 }
 
-#function to dispaly disk usage
+#FUCNTION 2 >> to dispaly disk usage
 show_disk_usage() {
     df -h #short and sweet command that displays the disk space. -h represents the filesystem to be shown ins human-readable format. 
 }
 
-# function displays the current users and what apps each user has running 
+#FUCNTION 3 >> displays the current users and what apps each user has running 
 show_current_users() {
     who > lists all the users currently logged into the sytsem. 
     echo
