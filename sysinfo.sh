@@ -1,13 +1,40 @@
 #!/bin/bash
 
 
-# Display a title
-    echo ===============================
-    echo WELCOME TO THE MENU
-    echo ===============================
+
+# =============================
+# HELP COMMAND LINE FEATURE  
+# =============================
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then 
+#this will check if in the command line -h or --help was typed, then it will run the below
+# if none of the above in the command line, then it runs the rest of the code 
+# basically, we usually check what a user inputs after we ask the user for one, but this checking for arguments from the beginning 
+    echo "----------------------------------"
+    echo "HELP - What This Script Does"
+    echo "----------------------------------"
+    echo "This script provides system monitoring tools:"
+    echo
+    echo "1: Show system info –> Displays the  OS, hostname, uptime, etc."
+    echo "2: Show disk usage –> Displays the available disk space on all mounted filesystems"
+    echo "3: Show current users –> Show all users currently logged into the system and what apps each user is using."
+    echo "4: Show top processes –> Displays top the  most CPU-intensive processes"
+    echo "6: Exit –> Short and sweet exit"
+    echo
+    echo "Options:"
+    echo "  ./sysinfo.sh       Launch the interactive menu"
+    echo "  ./sysinfo.sh -h    Show this help message only"
+    echo "----------------------------------"
+    exit 0
+fi
+
+#When no arguments are passed in the above script, then the below starts with the welcome message. 
 
 
+
+
+#+++++++++++++++++++
 #FUNCTIONS
+#+++++++++++++++++++
 
 # FUNCTION 1 >> It will display the OS NAME, VERSION, HOSTNAME, KERNEL VERSION, UPTIME
 show_system_info() {
@@ -34,10 +61,14 @@ get_os_info_because_mac_is_weird() {
     fi
 }
 
+#+++++++++++++++++++
+
 #FUCNTION 2 >> to dispaly disk usage
 show_disk_usage() {
     df -h #short and sweet command that displays the disk space. -h represents the filesystem to be shown ins human-readable format. 
 }
+
+#+++++++++++++++++++
 
 #FUCNTION 3 >> displays the current users and what apps each user has running 
 show_current_users() {
@@ -58,30 +89,64 @@ show_current_users() {
     
 }
 
+#+++++++++++++++++++
+
+#FUNCTION 4 >> show_top_processes >> will show the top 5 most CPU intensive processes
+show_top_processes() {
+    echo "----------------------------------"
+    echo "TOP 5 CPU-INTENSIVE PROCESSES - $current_time"
+    echo "----------------------------------"
+    printf "+------+--------+--------+----------------+\n"
+    printf "| PID  | USER   | CPU%%   | COMMAND        |\n"
+    printf "+------+--------+--------+----------------+\n"
+
+    if [[ "$(uname)" == "Darwin" ]]; then
+        ps -arcwwwxo pid,user,%cpu,comm | head -n 6 | tail -n 5 | awk '{printf "| %-4s | %-6s | %-6s | %-14s |\n", $1, $2, $3, $4}'
+    else
+        ps -eo pid,user,%cpu,comm --sort=-%cpu | head -n 6 | tail -n 5 | awk '{printf "| %-4s | %-6s | %-6s | %-14s |\n", $1, $2, $3, $4}'
+    fi
+
+    printf "+------+--------+--------+----------------+\n"
+    echo "----------------------------------"
+}
+
+
+
+# Display a title
+    echo ===============================
+    echo WELCOME TO THE SYSTEM MENU!!!!
+    echo ===============================
+
+
 # Display menu options
 echo "Welcome, select one of the following options using the number keys:"
 echo "1: Show System Info"
 echo "2: Show Disk Usage"
 echo "3: Show Current Users"
-echo "4: Exit"
+echo "4: Show Top Processes"
+echo "5: Exit"
+echo "For help on what each process does type, exit and in command line type > ./sysinfo.sh -h"
 
 # Prompt user for input
-read -p "Enter your choice [1-4]: " choice
+read -p "Enter your option [1-5]:" option
 
-# Create an if/elif/else structure to handle the different menu options.
-if [ "$choice" == "1" ]; then
+# Create an if/elif/else structure to handle the different menu options.s
+if [ "$option" == "1" ]; then
     echo "You selected Option 1: Show System Info"
      show_system_info
-elif [ "$choice" == "2" ]; then
+elif [ "$option" == "2" ]; then
     echo "You selected Option 2: Show Disk Usage"
     show_disk_usage
-elif [ "$choice" == "3" ]; then
+elif [ "$option" == "3" ]; then
     echo "You selected Option 3: Show Current Users"
     show_current_users
-elif [ "$choice" == "4" ]; then
+elif [ "$option" == "4" ]; then
+    echo "You selected Option 4: Show Top Processes"
+    show_top_processes   
+elif [ "$option" == "5" ]; then
     echo "You've selected: Exit"
     echo "Goodbye!"
     exit 0
 else
-    echo "Invalid selection. Please select options between 1-4"
+    echo "Invalid selection. Please select options between 1-5"
 fi
